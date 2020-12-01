@@ -1,4 +1,7 @@
-
+/**
+ *Lizbeth Ramos López    201749275 
+ * FCC BUAP
+ */
 public class NumDron {
     private int conta;
     NumDron(){

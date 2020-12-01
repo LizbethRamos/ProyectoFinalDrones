@@ -1,11 +1,13 @@
-
+/**
+ *Lizbeth Ramos López    201749275 
+ * FCC BUAP
+ */
 import java.awt.geom.Line2D;
 import javax.swing.*;
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
 public class JDrones extends javax.swing.JFrame {
     private DibujaDrones panel;
@@ -17,7 +19,8 @@ public class JDrones extends javax.swing.JFrame {
     private DronG aux;
     private int cX = 450;
     private int cY = 500;
-    public static Semaphore mutex = new Semaphore(5);
+    private int opcSincronizacion = -1;
+
     public JDrones() {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         initComponents();
@@ -38,13 +41,63 @@ public class JDrones extends javax.swing.JFrame {
     private void initComponents() {
 
         jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        OpcionMutex = new javax.swing.JMenuItem();
+        OpcionSemaforo = new javax.swing.JMenuItem();
+        OpcionVC = new javax.swing.JMenuItem();
+        OpcionMonitores = new javax.swing.JMenuItem();
+        OpcionBarreras = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jMenu2.setText("Opciones");
+        jMenu1.setText("Algoritmo de Sincronización");
+
+        OpcionMutex.setText("Mutex");
+        OpcionMutex.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionMutexActionPerformed(evt);
+            }
+        });
+        jMenu1.add(OpcionMutex);
+
+        OpcionSemaforo.setText("Semaforo");
+        OpcionSemaforo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionSemaforoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(OpcionSemaforo);
+
+        OpcionVC.setText("Variable de condición");
+        OpcionVC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionVCActionPerformed(evt);
+            }
+        });
+        jMenu1.add(OpcionVC);
+
+        OpcionMonitores.setText("Monitores");
+        OpcionMonitores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionMonitoresActionPerformed(evt);
+            }
+        });
+        jMenu1.add(OpcionMonitores);
+
+        OpcionBarreras.setText("Barreras");
+        OpcionBarreras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OpcionBarrerasActionPerformed(evt);
+            }
+        });
+        jMenu1.add(OpcionBarreras);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Opciones Dron");
 
         jMenuItem1.setText("Nuevo");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -92,11 +145,37 @@ public class JDrones extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
+    private void OpcionMutexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionMutexActionPerformed
+        System.out.println("entra mutex");
+        iniciar();
+        this.opcSincronizacion = 0;
+    }//GEN-LAST:event_OpcionMutexActionPerformed
+
+    private void OpcionSemaforoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionSemaforoActionPerformed
+        System.out.println("entra semaforo");
+        iniciar();
+        this.opcSincronizacion = 1;
+    }//GEN-LAST:event_OpcionSemaforoActionPerformed
+
+    private void OpcionVCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionVCActionPerformed
+        System.out.println("entra VC");
+        iniciar();
+        this.opcSincronizacion = 2;
+    }//GEN-LAST:event_OpcionVCActionPerformed
+
+    private void OpcionMonitoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionMonitoresActionPerformed
+        System.out.println("entra Monitores");
+        iniciar();
+        this.opcSincronizacion = 3;
+    }//GEN-LAST:event_OpcionMonitoresActionPerformed
+
+    private void OpcionBarrerasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpcionBarrerasActionPerformed
+        System.out.println("Entra barreras");
+        iniciar();
+        this.opcSincronizacion = 4;
+    }//GEN-LAST:event_OpcionBarrerasActionPerformed
+
     public static void main(String args[]) {
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -113,11 +192,6 @@ public class JDrones extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(JDrones.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new JDrones().setVisible(true);
@@ -126,6 +200,12 @@ public class JDrones extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem OpcionBarreras;
+    private javax.swing.JMenuItem OpcionMonitores;
+    private javax.swing.JMenuItem OpcionMutex;
+    private javax.swing.JMenuItem OpcionSemaforo;
+    private javax.swing.JMenuItem OpcionVC;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -147,7 +227,8 @@ public class JDrones extends javax.swing.JFrame {
         int t = 0;
         for(int w = 0; w < (cX - 20); w+= x){
             for(int z = 0; z < (cY - 20); z += y){
-                dronesG.get(t).setFrame((int)(Math.random()*x+w),(int)(Math.random()*y+z), 20, 20);
+                dronesG.get(t).setFrame(w,z,20,20);
+//                dronesG.get(t).setFrame((int)(Math.random()*x+w),(int)(Math.random()*y+z), 20, 20);
                 drones.get(t).setLimInfXInfY(w, z);
                 drones.get(t).setLimSupXSupY(w + x, z + y);                        
                 drones.get(t).setAB();
@@ -169,6 +250,17 @@ public class JDrones extends javax.swing.JFrame {
         n.setConta(n.getConta() +1);
         aux = new DronG();
         dronesG.add(aux);
-        drones.add(new Dron(panel, mutex,aux));
+        drones.add(new Dron(panel,aux, opcSincronizacion));
+    }
+    
+    private void iniciar(){
+            for( Dron d: drones)
+                d.parar();
+            dronesG.clear();
+            drones.clear();
+            lineasG.clear();
+            n.setConta(0);
+            cX = 450;
+            cY = 500; 
     }
 }

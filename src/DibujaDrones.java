@@ -1,4 +1,7 @@
-
+/**
+ *Lizbeth Ramos López    201749275 
+ * FCC BUAP
+ */
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;

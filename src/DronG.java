@@ -1,5 +1,7 @@
-
-
+/**
+ *Lizbeth Ramos López    201749275 
+ * FCC BUAP
+ */
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
