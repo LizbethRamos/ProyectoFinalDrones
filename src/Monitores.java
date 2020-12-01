@@ -5,7 +5,8 @@
 public class Monitores {
     private int recurso = 0;
     private boolean hayRecurso = false;
-    public synchronized int get(){
+    
+    public synchronized int acquire(){
         while(hayRecurso == false){
             try{
                 wait();
@@ -15,7 +16,7 @@ public class Monitores {
         hayRecurso = false;
         return recurso;
     }
-    public synchronized void put(){
+    public synchronized void release(){
         while(hayRecurso){
             try{
                 wait();

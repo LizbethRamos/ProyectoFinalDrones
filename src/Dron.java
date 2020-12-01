@@ -2,12 +2,14 @@
  *Lizbeth Ramos López    201749275 
  * FCC BUAP
  */
+import java.util.concurrent.BrokenBarrierException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.locks.Condition;
 
 public class Dron extends Thread{
    
@@ -17,9 +19,10 @@ public class Dron extends Thread{
     private boolean corriendo = true;
     //variables de sincronización
     private Semaphore s;       
-    private Lock mutex;
+    private Lock mutex, vc;
     private Monitores monitor;
-    final CyclicBarrier barrera;
+    private CyclicBarrier barrera;
+    private Condition cond;
 
     Dron(DibujaDrones panel, DronG d, int opcion){
         this.panel=panel;
@@ -30,6 +33,8 @@ public class Dron extends Thread{
         this.mutex = new ReentrantLock();   
         this.monitor = new Monitores();
         this.barrera = new CyclicBarrier(1);
+        this.vc = new ReentrantLock();
+        this.cond = vc.newCondition();
     }
 
     public void setAB(){
@@ -61,24 +66,34 @@ public class Dron extends Thread{
                         s.release();                        
                         break;
                     case 2:
-
+                        try{
+                            vc.lock();
+                            SC();
+                            cond.signal();
+                        }catch(Exception e){
+                            vc.unlock();
+                        }
                         break;
                     case 3:
-                        monitor.put();
+                        monitor.acquire();
                         SC();
-                        monitor.get();
+                        monitor.release();
                         break;
                     case 4:
-                        barrera.await();//Se queda bloqueado hasta que todos los drones hagan esta llamada
-                           SC();
-                        barrera.await();
+                        try {
+                            barrera.await();//Se queda bloqueado hasta que todos los drones hagan esta llamada
+                            SC();
+                            barrera.await();
+                        } catch (BrokenBarrierException ex) {
+                            Logger.getLogger(Dron.class.getName()).log(Level.SEVERE, null, ex);
+                        }                          
                         break;
                 }
                 panel.repaint();
                 Thread.sleep((int)(Math.random()*15));
                 if(!corriendo)
                     this.join();
-            } catch (Exception ex) {
+            } catch (InterruptedException ex) {
                 Logger.getLogger(Dron.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
